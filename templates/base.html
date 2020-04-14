@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="static/css/style.css" />
+    <title>Booker</title>
+    <style> </style>
+</head>
+    <body>
+        <nav class="navbar navbar_parent" id="navbar">
+            <div class="container">
+                <p class="logo">
+                    <a class="logo_link" href="/">
+                        <img src="http://booker.psdemo.ru/data/img/logo.png" width="174" height="62" alt="Аватарка">
+                    </a>
+                </p>
+                <ul class="primer_menu">
+                    <li>
+                        <a href="/books">Все книги</a>
+                    </li>
+                    <li>
+                        <a href="/genres">Жанры</a>
+                    </li>
+                     <li>
+                        <a href="/authors">Авторы</a>
+                    </li>
+                    <li>
+                        <form>
+                          <input type="text" placeholder="Искать здесь...">
+                          <button type="submit" value="Найти"></button>
+                        </form>
+                    </li>
+                    <li>
+                        <a href="/login">Вход</a>
+                    </li>
+                    <li>
+                        <a href="/register">Регистрация</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        {% block content %}
+        {% endblock %}
+        <footer>
+            <div class="footer_content">
+                <div class="footer_about_link_list">
+                    <div class="footer_about_link_container">
+                        <p class="footer_title">
+                            Booker
+                        </p>
+                        <ul>
+                            <li class="footer_item">
+                                <a href="/">О проекте</a>
+                            </li>
+
+                             <li class="footer_item">
+                                <a href="/">Контакты</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="footer_about_link_container">
+                        <p class="footer_title">
+                            Сотрудничество
+                        </p>
+                        <ul>
+                        <li class="footer_item">
+                            <a href="/">Информация</a>
+                        </li>
+
+                        <li class="footer_item">
+                            <a href="/">Авторам</a>
+                        </li>
+
+                        <li class="footer_item">
+                            <a href="/">Библиотекарям</a>
+                        </li>
+                        </ul>
+                    </div>
+
+                    <div class="footer_about_link_container">
+                        <p class="footer_title">
+                            Обслуживание
+                        </p>
+                        <ul>
+                        <li class="footer_item">
+                            <a href="/">Помощь</a>
+                        </li>
+
+                        <li class="footer_item">
+                            <a href="/">Вопросы</a>
+                        </li>
+
+                        <li class="footer_item">
+                            <a href="/">Ответы</a>
+                        </li>
+
+                        <li class="footer_item">
+                            <a href="/">Возврат</a>
+                        </li>
+
+                        <li class="footer_item">
+                            <a href="/">Заказ</a>
+                        </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer_link_list">
+                    <div class="footer_link_container">
+                        <li class="footer_item">
+                            <a href="/">
+                                © ООО «Booker»
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="footer_link_container">
+                        <li class="footer_item">
+                            <a href="/">
+                                Booker в соцсетях
+                            </a>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

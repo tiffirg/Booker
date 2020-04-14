@@ -1,0 +1,40 @@
+{% macro set_book_menu(url, image_url, name, author) %}
+<div class="book_card swiper_slide">
+    <div class="book">
+        <div class="book_image" style="width: 124px; height: 196px;">
+            <a href={{url}}>
+                <img width="124" height="196" src={{image_url}} alt="Тони Моррисон - Самые голубые глаза" class="BookImage" srcset="{{image_url}} 2x">
+            </a>
+        </div>
+    </div>
+
+    <div class="book_info">
+        <a class="book_name" href="/books">
+            <div>
+                <span width="0">
+                    <span>
+                        {{name}}
+                    </span>
+                    <span style="position: fixed; visibility: hidden; top: 0px; left: 0px;">
+                        <span></span>
+                    </span>
+                </span>
+            </div>
+        </a>
+        <div class="book_author_wrapper">
+            <a class="book_author" href="authors">
+                <div>
+                    <span width="0">
+                    <span>
+                        {{author}}
+                    </span>
+                    <span style="position: fixed; visibility: hidden; top: 0px; left: 0px;">
+                        <span></span>
+                    </span>
+                </span>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endmacro %}
