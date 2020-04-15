@@ -4,39 +4,39 @@
 {% block content %}
     <div class="content">
         {% include "banner.html" %}
-    <div class="section">
+        <div class="section">
 
-        <div class="container_menu">
-            <div class="signboard_menu">
-                <h2>
-                    Книги
-                </h2>
+            <div class="container_menu">
+                <div class="signboard_menu">
+                    <h2>
+                        Книги
+                    </h2>
 
-                <a href="/books">
-                    Все книги >
-                </a>
-            </div>
-            <div class="menu_carousel">
-                <div class="swiper_container swiper-container-horizontal swiper-container-free-mode">
-                    <div class="swiper_wrapper" style="transform: translate3d(0px, 0px, 0px);">
-                        {% for values in books %}
-                            {{ set_book_menu(values["url"], values["image_url"], values["name"], values["author"]) }}
-                        {% endfor %}
+                    <a href="/books">
+                        Все книги >
+                    </a>
+                </div>
+                <div class="menu_carousel">
+                    <div class="swiper_container swiper-container-horizontal swiper-container-free-mode">
+                        <div class="swiper_wrapper" style="transform: translate3d(0px, 0px, 0px);">
+                            {% for values in books %}
+                                {{ set_book_menu(values["url"], values["image_url"], values["name"], values["author"]) }}
+                            {% endfor %}
+                        </div>
+
+                        <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
 
-                    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
-                </div>
+                    <div class="carousel_btn_prev isHidden">
+                        <span class="arrow_left"> </span>
+                    </div>
 
-                <div class="carousel_btn_prev isHidden">
-                    <span class="arrow_left"> </span>
-                </div>
-
-                <div class="carousel_btn_next">
-                    <span class="arrow_right"> </span>
+                    <div class="carousel_btn_next">
+                        <span class="arrow_right"> </span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </div>
+        </div>
         </div>
 {% endblock %}

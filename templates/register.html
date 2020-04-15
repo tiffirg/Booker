@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="section_input">
+        <main role="main" class="container">
+            <h1>Регистрация</h1>
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                {% set trash = ["csrf_token", "submit"] %}
+                {% for field in form if field.name not in trash %}
+                    <p>
+                        {{ field.label }}<br>
+                        {% if types[index0] == 'EmailField' %}
+                            {{ field(class="form-control", type="email") }}
+                        {% elif types[index0] == 'PasswordField' %}
+                            {{ field(class="form-control", type="password") }}
+                        {% else %}
+                             {{ field(class="form-control") }}<br>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                            </div>
+                        {% endfor %}
+                    </p>
+                {% endfor %}
+                <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+                {% if message %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            </form>
+        </main>
+    </div>
+{% endblock %}

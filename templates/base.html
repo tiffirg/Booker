@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="static/css/style.css" />
+
     <title>Booker</title>
     <style> </style>
 </head>
     <body>
-        <nav class="navbar navbar_parent" id="navbar">
-            <div class="container">
+        <nav class="nav_navbar navbar_parent" id="nav_navbar">
+            <div class="nav_container">
                 <p class="logo">
                     <a class="logo_link" href="/">
                         <img src="http://booker.psdemo.ru/data/img/logo.png" width="174" height="62" alt="Аватарка">
@@ -25,17 +26,19 @@
                         <a href="/authors">Авторы</a>
                     </li>
                     <li>
-                        <form>
-                          <input type="text" placeholder="Искать здесь...">
-                          <button type="submit" value="Найти"></button>
+                        <form class="search_btn">
+                          <input type="text" placeholder="Искать книгу...">
+                          <button type="submit" value="Найти книгу"></button>
                         </form>
                     </li>
-                    <li>
-                        <a href="/login">Вход</a>
-                    </li>
-                    <li>
-                        <a href="/register">Регистрация</a>
-                    </li>
+
+                        <li>
+                            <a href="/login">Вход</a>
+                        </li>
+                        <li>
+                            <a href="/register">Регистрация</a>
+                        </li>
+
                 </ul>
             </div>
         </nav>
