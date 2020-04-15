@@ -3,7 +3,6 @@ import requests
 import codecs
 import os
 import hashlib
-import gunicorn
 from ast import literal_eval as eval
 from flask import Flask, render_template, redirect, session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -57,7 +56,7 @@ def books():
     params = {}
     response = requests.get(URL_API + "books", params=params)
     response_json = response.json()
-    return response_json
+    return render_template("books.html")
 
 
 @app.route('/genres')

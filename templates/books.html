@@ -1,6 +1,23 @@
 {% extends "base.html" %}
+{% from "macros.html" import set_book_menu %}
 {% block content %}
-    <main>
+<div class="content">
+    <main class="section_books">
+        <div class="book_list">
+            <ul class="book_list_items">
+                {% for i in range(10) %}
+                    {{ set_book_menu() }}
+                {% endfor %}
+            </ul>
+        </div>
 
+        <form class="ContextPagination__contextPagination">
+            <a href="/" class="NavigationButton__prev">
+            </a>
+
+            <a href="/" class="NavigationButton__next">
+            </a>
+        </form>
     </main>
+</div>
 {% endblock %}

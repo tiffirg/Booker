@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import set_book_menu %}
+{% from "macros.html" import set_book_swiper %}
 
 {% block content %}
     <div class="content">
@@ -20,7 +20,7 @@
                     <div class="swiper_container swiper-container-horizontal swiper-container-free-mode">
                         <div class="swiper_wrapper" style="transform: translate3d(0px, 0px, 0px);">
                             {% for values in books %}
-                                {{ set_book_menu(values["url"], values["image_url"], values["name"], values["author"]) }}
+                                {{ set_book_swiper(values["url"], values["image_url"], values["name"], values["author"]) }}
                             {% endfor %}
                         </div>
 

@@ -1,4 +1,4 @@
-{% macro set_book_menu(url, image_url, name, author) %}
+{% macro set_book_swiper(url, image_url, name, author) %}
 <div class="book_card swiper_slide">
     <div class="book">
         <div class="book_image" style="width: 124px; height: 196px;">
@@ -37,4 +37,64 @@
         </div>
     </div>
 </div>
+{% endmacro %}
+
+{% macro set_book_menu() %}
+<li class="book_list_item">
+    <div class="context_book_list_item">
+        <div class="ContextBookCardLong__bookWrapper">
+            <div class="ContextBookCardLong__bookCover">
+                <div class="BookCover__book" style="width: 112px; height: 180px;">
+                    <a href="/">
+                       <img width="112" height="180" src="https://i1.mybook.io/c/224x360/book_covers/c3/e1/c3e18514-d48d-47d3-a6d5-17557b3f5003.jpg?v2" alt="Федор Достоевский - Преступление и наказание" class="BookCover__bookImage" srcset="https://i1.mybook.io/c/224x360/book_covers/c3/e1/c3e18514-d48d-47d3-a6d5-17557b3f5003.jpg?v2 2x">
+                    </a>
+                </div>
+            </div>
+
+            <div class="ContextBookCardLong__bookDetail">
+                <div class="ContextBookCardLong__bookData">
+                    <div class="ContextBookCardLong__bookTitle">
+                        <a href="/author/fedor-mihajlovich-dostoevskij/prestuplenie-i-nakazanie/" style="color: #d2d4d6">
+                            <div>
+                                <span width="0">
+                                    <span>
+                                        <span>
+                                            Преступление и наказание
+                                        </span>
+                                    </span>
+                                    <span style="position: fixed; visibility: hidden; top: 0px; left: 0px;">
+                                        <span>…</span>
+                                    </span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <a class="ContextBookCardLong__bookAuthor" href="/">
+                       <div>
+                           <span width="0">
+                               <span>
+                                    <span>Федор Достоевский</span>
+                               </span>
+                               <span style="position: fixed; visibility: hidden; top: 0px; left: 0px;">
+                                   <span>…</span>
+                               </span>
+                           </span>
+                       </div>
+                    </a>
+                </div>
+
+                <div class="ContextBookCardLong__bookDescription">
+                   «Преступление и наказание» — классический психологический роман, написанный Достоевским с характерным для автора глубоким философским подтекстом. Книга входит в школьную программу по литературе — однако понять произведение во всем его величии, будучи школьником, очень сложно. Именно поэтому стоит...
+                    <a class="ContextBookCardLong__link" href="/"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="ContextBookCardLong__bookDescriptionMobile">
+            «Преступление и наказание» — классический психологический роман, написанный Достоевским с характерным для автора глубоким философским подтекстом. Книга входит в школьную программу по литературе — однако понять произведение во всем его величии, будучи школьником, очень сложно. Именно поэтому стоит...
+            <a class="ContextBookCardLong__link" href="/"></a>
+        </div>
+    </div>
+</li>
 {% endmacro %}
