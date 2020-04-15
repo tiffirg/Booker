@@ -62,7 +62,6 @@ def books():
 @app.route('/genres')
 def genres():
     response = requests.get(URL_API + "book\\genres", json={})
-    print(response.json())
     return
 
 
