@@ -3,10 +3,11 @@ import requests
 import codecs
 import hashlib
 from ast import literal_eval as eval
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
+
 
 config_file = configparser.ConfigParser()
 config_file.read_file(codecs.open("settings.ini", "r", "utf8"))
@@ -14,6 +15,7 @@ URL_API = config_file["API"]["url_api"]
 REGISTRATION = config_file["Registration"]
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config_file["CSRF"]["secret_key"]
+session.permanent = True
 # login_manager = LoginManager()
 # login_manager.init_app(app)
 
@@ -29,6 +31,14 @@ app.config['SECRET_KEY'] = config_file["CSRF"]["secret_key"]
 # def logout():
 #     logout_user()
 #     return redirect("/")
+
+@app.route('/session_test/')
+def session_test():
+    if 'visits_count' in session:
+        session['visits_count'] = session.get('visits_count') + 1
+    else:
+        session['visits_count'] = 1
+    # дальше - код для вывода страницы
 
 
 @app.route('/')
