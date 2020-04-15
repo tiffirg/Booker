@@ -1,6 +1,7 @@
 import configparser
 import requests
 import codecs
+import os
 import hashlib
 from ast import literal_eval as eval
 from flask import Flask, render_template, redirect, session
@@ -118,4 +119,5 @@ def register():
 
 
 if __name__ == '__main__':
-    app.run(port=8080, host='127.0.0.1')
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
