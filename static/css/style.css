@@ -911,7 +911,7 @@ a {
     box-sizing: inherit;
 }
 
-a .btn_exit {
+.btn_exit {
   position: relative;
   display: inline-block;
   font-size: 90%;
@@ -929,10 +929,10 @@ a .btn_exit {
    0 0 1px 1px rgba(0,1,6,.2);
   transition: .2s ease-in-out;
 }
-a .btn_exit:hover:not(:active) {
+.btn_exit:hover:not(:active) {
   background: linear-gradient(rgb(126,126,134), rgb(70,71,76)) rgb(126,126,134);
 }
-a .btn_exit:active {
+.btn_exit:active {
   top: 1px;
   background: linear-gradient(rgb(76,77,82), rgb(56,57,62)) rgb(76,77,82);
   box-shadow:
