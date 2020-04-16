@@ -8,7 +8,7 @@ from flask import Flask, render_template, redirect, session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
-from forms.users import User, convert_user
+from forms.users import convert_user
 
 
 config_file = configparser.ConfigParser()
