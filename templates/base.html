@@ -31,14 +31,18 @@
                           <button type="submit" value="Найти книгу"></button>
                         </form>
                     </li>
-
+                    {% if current_user.is_authenticated %}
+                        <li>
+                            <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+                        </li>
+                    {% else %}
                         <li>
                             <a href="/login">Вход</a>
                         </li>
                         <li>
                             <a href="/register">Регистрация</a>
                         </li>
-
+                    {% endif %}
                 </ul>
             </div>
         </nav>

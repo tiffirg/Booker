@@ -8,6 +8,7 @@ from flask import Flask, render_template, redirect, session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
+from forms.users import User, convert_user
 
 
 config_file = configparser.ConfigParser()
@@ -17,21 +18,23 @@ REGISTRATION = config_file["Registration"]
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config_file["CSRF"]["secret_key"]
 # session.permanent = True
-# login_manager = LoginManager()
-# login_manager.init_app(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     response = requests.get(URL_API + f"user\\{user_id}").json()
-#     return response
+@login_manager.user_loader
+def load_user(user_id):
+    response = requests.get(URL_API + f"user/{user_id}").json()
+    user = convert_user(response)
+    return user
 
 
-# @app.route('/logout')
-# @login_required
-# def logout():
-#     logout_user()
-#     return redirect("/")
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
+
 
 @app.route('/session_test/')
 def session_test():
@@ -55,7 +58,6 @@ def main():
 def books():
     params = {}
     response = requests.get(URL_API + "books", params=params)
-    response_json = response.json()
     return render_template("books.html")
 
 
@@ -82,7 +84,7 @@ def login():
         response = requests.get(URL_API + "login", json=login_request).json()
         status = response["authentication_status"]
         if status == "SUCCESS":
-            login_user(response["user"], remember=form.remember_me.data)
+            login_user(convert_user(response), remember=form.remember_me.data)
             return redirect('/')
         return render_template('login.html', form=form, message=login_statuses[status])
     return render_template('login.html', form=form)
@@ -107,8 +109,7 @@ def register():
         user["email"] = form.email.data
         user["address"]["city"] = form.city.data
         user["address"]["address_line"] = form.address.data
-        user["password_hash"] = hashlib.md5(bytes(form.password.data, encoding = 'utf-8')).hexdigest()
-        print(user["password_hash"])
+        user["password_hash"] = hashlib.md5(bytes(form.password.data, encoding='utf-8')).hexdigest()
         response = requests.post(URL_API + "registration", json=registration_request).json()
         status = response["authentication_status"]
         if status == "SUCCESS":
@@ -118,5 +119,5 @@ def register():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+
+    app.run()
