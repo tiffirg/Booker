@@ -5,19 +5,29 @@
     <main class="section_books">
         <div class="book_list">
             <ul class="book_list_items">
-                {% for i in range(10) %}
-                    {{ set_book_menu() }}
+                {% for book in books %}
+                    {{ set_book_menu(url, book["id"], book["icon_url"], book["name"], book["author"], book["description"]) }}
                 {% endfor %}
             </ul>
         </div>
 
-        <form class="ContextPagination__contextPagination">
-            <a href="/" class="NavigationButton__prev">
-            </a>
+        <ul class="paginate">
+            {% for i in range(amount_pages) %}
+                <li>
+                    <a href={{i}}>
+                        {{i + 1}}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
 
-            <a href="/" class="NavigationButton__next">
-            </a>
-        </form>
+        <!--<form class="ContextPagination__contextPagination">-->
+            <!--<a href="/" class="NavigationButton__prev">-->
+            <!--</a>-->
+
+            <!--<a href="/" class="NavigationButton__next">-->
+            <!--</a>-->
+        <!--</form>-->
     </main>
 </div>
 {% endblock %}

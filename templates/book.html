@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+    <div class="ab-container">
+        <div class="block_table">
+            <div class="content_column column">
+                <div class="biblio_book_top block_table">
+                    <div class="biblio_book_left column">
+                        <div class="biblio_book_cover biblio_book_cover_type0">
+                            <div class="cover">
+                                <img id="biblio_book_cover_image" class itemprop="image" width="415" height="587" src={{book["image_url"]}} onerror="this.dataset.coverError = 1;" data-src={{book["image_url"]}} alt={{book["name"]}}>
+                            </div>
+                        </div>
+
+                        <div class="biblio_book_other_carriers">
+                            <div class="biblio_book_other_carriers__item">
+                                <h2>Книга доступна</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="biblio_book_center column">
+                        <div class="biblio_book_name biblio-book__title-block">
+                            <h1 class="label label-text">{{book["name"]}}</h1>
+                        </div>
+
+                        <div class="biblio_book_author">
+                            <h1 itemprop="name"><span class="label label-text">{{book["author"]}}</span></h1>
+                        </div>
+
+                        <div class="biblio_book_annotation">
+                            <div class="biblio_book_descr_caption" role="heading" aria-level="3">Описание</div>
+                            <div itemprop="description">
+                                <p>{{book["description"]}}</p>
+                            </div>
+                        </div>
+                        <div class="biblio_book_buy clicktag" id="unr_buynow" data-clicktag-id="buynow_book">
+                            <form action="" method="post">
+                                <input type="hidden" name="action" value="create_custom_set">
+                                <input type="hidden" name="csrf" value="830634:1587109538:210b727c6830279061c6264dcc6a28a1809fef05db3676ffd63a3e8114365af1">
+                                <input value="50536228" type="hidden" name="arts"><input type="hidden" name="buy_now" value="true">
+                                <button rel="#buy_book_data" class="coolbtn btn-green a_buyany">
+                                    <span class="uppercase">
+                                        Добавить в корзину
+                                    </span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

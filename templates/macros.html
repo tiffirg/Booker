@@ -1,9 +1,11 @@
-{% macro set_book_swiper(url, image_url, name, author) %}
+{% macro set_book_swiper(url, id, image_url, name, author) %}
 <div class="book_card swiper_slide">
     <div class="book">
         <div class="book_image" style="width: 124px; height: 196px;">
-            <a href={{url}}>
-                <img width="124" height="196" src={{image_url}} alt="Тони Моррисон - Самые голубые глаза" class="BookImage" srcset="{{image_url}} 2x">
+            {% set id_book = id | string %}
+            {% set url_book = url + id_book %}
+            <a href={{url_book}}>
+                <img width="124" height="196" src={{image_url}} alt="Картинка книги" class="BookImage" srcset="{{image_url}} 2x">
             </a>
         </div>
     </div>
@@ -39,14 +41,16 @@
 </div>
 {% endmacro %}
 
-{% macro set_book_menu() %}
+{% macro set_book_menu(url, id, image_url, name, author, description) %}
 <li class="book_list_item">
     <div class="context_book_list_item">
         <div class="ContextBookCardLong__bookWrapper">
             <div class="ContextBookCardLong__bookCover">
                 <div class="BookCover__book" style="width: 112px; height: 180px;">
-                    <a href="/">
-                       <img width="112" height="180" src="https://i1.mybook.io/c/224x360/book_covers/c3/e1/c3e18514-d48d-47d3-a6d5-17557b3f5003.jpg?v2" alt="Федор Достоевский - Преступление и наказание" class="BookCover__bookImage" srcset="https://i1.mybook.io/c/224x360/book_covers/c3/e1/c3e18514-d48d-47d3-a6d5-17557b3f5003.jpg?v2 2x">
+                    {% set id_book = id | string %}
+                    {% set url_book = url + id_book %}
+                    <a href={{url_book}}>
+                       <img width="112" height="180" src={{image_url}} alt={{name}} class="BookCover__bookImage" srcset="{{image_url}} 2x">
                     </a>
                 </div>
             </div>
@@ -59,7 +63,7 @@
                                 <span width="0">
                                     <span>
                                         <span>
-                                            Преступление и наказание
+                                            {{name}}
                                         </span>
                                     </span>
                                     <span style="position: fixed; visibility: hidden; top: 0px; left: 0px;">
@@ -74,7 +78,9 @@
                        <div>
                            <span width="0">
                                <span>
-                                    <span>Федор Достоевский</span>
+                                    <span>
+                                        {{author}}
+                                    </span>
                                </span>
                                <span style="position: fixed; visibility: hidden; top: 0px; left: 0px;">
                                    <span>…</span>
@@ -85,14 +91,14 @@
                 </div>
 
                 <div class="ContextBookCardLong__bookDescription">
-                   «Преступление и наказание» — классический психологический роман, написанный Достоевским с характерным для автора глубоким философским подтекстом. Книга входит в школьную программу по литературе — однако понять произведение во всем его величии, будучи школьником, очень сложно. Именно поэтому стоит...
+                    {{description}}
                     <a class="ContextBookCardLong__link" href="/"></a>
                 </div>
             </div>
         </div>
 
         <div class="ContextBookCardLong__bookDescriptionMobile">
-            «Преступление и наказание» — классический психологический роман, написанный Достоевским с характерным для автора глубоким философским подтекстом. Книга входит в школьную программу по литературе — однако понять произведение во всем его величии, будучи школьником, очень сложно. Именно поэтому стоит...
+            {{description}}
             <a class="ContextBookCardLong__link" href="/"></a>
         </div>
     </div>

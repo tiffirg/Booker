@@ -4,7 +4,7 @@ import codecs
 import os
 import hashlib
 from ast import literal_eval as eval
-from flask import Flask, render_template, redirect, session
+from flask import Flask, render_template, redirect, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
@@ -17,7 +17,6 @@ URL_API = config_file["API"]["url_api"]
 REGISTRATION = config_file["Registration"]
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config_file["CSRF"]["secret_key"]
-# session.permanent = True
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -36,34 +35,37 @@ def logout():
     return redirect("/")
 
 
-@app.route('/session_test/')
-def session_test():
-    if 'visits_count' in session:
-        session['visits_count'] = session.get('visits_count') + 1
-    else:
-        session['visits_count'] = 1
-    # дальше - код для вывода страницы
-
-
 @app.route('/')
 def main():
-    params = {"random": 15}
+    params = {"random": 7}
     response = requests.get(URL_API + "books", params=params)
     response_json = response.json()
     books = response_json['books']
-    return render_template("main.html", books=books)
+    return render_template("main.html", url="/book/", books=books)
 
 
-@app.route("/books", methods=["GET", "POST"])
-def books():
-    params = {}
-    response = requests.get(URL_API + "books", params=params)
-    return render_template("books.html")
+@app.route("/books/<int:page>", methods=["GET", "POST"])
+def books(page):
+    amount_books = 20
+    params = {"onlyAmount": True}
+    amount_all_books = requests.get(URL_API + "books", params=params).json()["amount"]
+    amount_pages = amount_all_books // amount_books + 1 if amount_all_books % amount_books != 0 else 0
+    params = {"amount": amount_books, "start": amount_books * page}
+    response = requests.get(URL_API + "books", params=params).json()
+    books = response["books"]
+    return render_template("books.html", url="/book/", books=books, amount_pages=amount_pages)
+
+
+@app.route("/book/<int:id>", methods=["POST", "GET"])
+def book(id):
+    response = requests.get(URL_API + "book/" + str(id)).json()
+    book = response["book"]
+    return render_template("book.html", book=book)
 
 
 @app.route('/genres')
 def genres():
-    response = requests.get(URL_API + "book\\genres", json={})
+    response = requests.get(URL_API + "book\genres", json={})
     return
 
 
@@ -119,5 +121,6 @@ def register():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host='0.0.0.0', port=port)
+    app.run()

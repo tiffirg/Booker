@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="static/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}" />
 
     <title>Booker</title>
     <style> </style>
@@ -17,7 +17,7 @@
                 </p>
                 <ul class="primer_menu">
                     <li>
-                        <a href="/books">Все книги</a>
+                        <a href="/books/0">Все книги</a>
                     </li>
                     <li>
                         <a href="/genres">Жанры</a>
