@@ -11,6 +11,7 @@ class User(UserMixin):
 
 
 def convert_user(response_user):
+    print(response_user)
     user = response_user["user"]
     result_user = User()
     result_user.id = user["id"]

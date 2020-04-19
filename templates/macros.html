@@ -58,7 +58,7 @@
             <div class="ContextBookCardLong__bookDetail">
                 <div class="ContextBookCardLong__bookData">
                     <div class="ContextBookCardLong__bookTitle">
-                        <a href="/author/fedor-mihajlovich-dostoevskij/prestuplenie-i-nakazanie/" style="color: #d2d4d6">
+                        <a href="{{url_book}}" style="color: #d2d4d6">
                             <div>
                                 <span width="0">
                                     <span>
@@ -74,7 +74,7 @@
                         </a>
                     </div>
 
-                    <a class="ContextBookCardLong__bookAuthor" href="/">
+                    <a class="ContextBookCardLong__bookAuthor" href={{url_book}}>
                        <div>
                            <span width="0">
                                <span>
@@ -99,8 +99,42 @@
 
         <div class="ContextBookCardLong__bookDescriptionMobile">
             {{description}}
-            <a class="ContextBookCardLong__link" href="/"></a>
         </div>
     </div>
+</li>
+{% endmacro %}
+
+{% macro set_list_values(dict_values, url) %}
+    <main class="main_genres content">
+        <section>
+            <div class="_9837af">
+                {% for value in dict_values %}
+                    {{ set_values(value, dict_values[value], url) }}
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+{% endmacro %}
+
+{% macro set_values(name, values, url) %}
+<div class="_289d24">
+    <h1 class="_953327 _e86232">
+        {{name}}
+    </h1>
+    <ul class="_b5542b">
+        {% for value in values %}
+            {{ set_value(value, url) }}
+        {% endfor %}
+    </ul>
+</div>
+{% endmacro %}
+
+{% macro set_value(value, url) %}
+<li class="_899320 _1b82e1">
+    {% set id_book = value["id"] | string %}
+    {% set url_value = url + id_book + "/0" %}
+    <a class="_7fe79a _bf2350 _b4693b" href={{url_value}}>
+        {{ value["name"] }}
+    </a>
 </li>
 {% endmacro %}

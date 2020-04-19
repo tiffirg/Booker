@@ -4,11 +4,18 @@ import codecs
 import os
 import hashlib
 from ast import literal_eval as eval
-from flask import Flask, render_template, redirect, abort
+from flask import Flask, render_template, redirect, abort, request
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
+from forms.cartlibrarianform import LibrarianForm
 from forms.users import convert_user
+
+
+def transliteration2(text):
+    cyrillic = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
+    latin = 'a|b|v|g|d|e|e|zh|z|i|i|k|l|m|n|o|p|r|s|t|u|f|kh|tc|ch|sh|shch||y||e|iu|ia|A|B|V|G|D|E|E|Zh|Z|I|I|K|L|M|N|O|P|R|S|T|U|F|Kh|Tc|Ch|Sh|Shch||Y||E|Iu|Ia'.split('|')
+    return text.translate({ord(k): v for k, v in zip(cyrillic,latin)})
 
 
 config_file = configparser.ConfigParser()
@@ -37,7 +44,7 @@ def logout():
 
 @app.route('/')
 def main():
-    params = {"random": 7}
+    params = {"random": 15}
     response = requests.get(URL_API + "books", params=params)
     response_json = response.json()
     books = response_json['books']
@@ -46,7 +53,7 @@ def main():
 
 @app.route("/books/<int:page>", methods=["GET", "POST"])
 def books(page):
-    amount_books = 20
+    amount_books = int(config_file["Constant"]["page_amount_books"])
     params = {"onlyAmount": True}
     amount_all_books = requests.get(URL_API + "books", params=params).json()["amount"]
     amount_pages = amount_all_books // amount_books + 1 if amount_all_books % amount_books != 0 else 0
@@ -58,20 +65,92 @@ def books(page):
 
 @app.route("/book/<int:id>", methods=["POST", "GET"])
 def book(id):
+    book_in_cart, it_is_librarian = False, False
     response = requests.get(URL_API + "book/" + str(id)).json()
     book = response["book"]
-    return render_template("book.html", book=book)
+    if current_user.is_authenticated:
+        book_id = book["id"]
+        response = requests.get(URL_API + f'user/{current_user.id}').json()
+        user = response["user"]
+        if user["type"] == "LIBRARIAN":
+            it_is_librarian = True
+        if user["cart"] and str(book_id) in user["cart"].split(";"):
+            book_in_cart = True
+    return render_template("book.html", book=book, book_in_cart=book_in_cart, it_is_librarian=it_is_librarian)
 
 
 @app.route('/genres')
 def genres():
-    response = requests.get(URL_API + "book\genres", json={})
-    return
+    params = {"letters": True}  # !
+    response = requests.get(URL_API + "book/genres", params=params).json()
+    dict_genres = response["genres"]  # !
+    return render_template("genres.html", dict_genres=dict_genres, url="/genre/")
+
+
+@app.route("/genre/<int:id>/<int:page>")
+def genre(id, page):
+    name = requests.get(URL_API + f"genre/{id}").json()["genre"]["name"]
+    amount_books = int(config_file["Constant"]["page_amount_books"])
+    params = {"onlyAmount": True, "genre": name}  # !
+    amount_all_books_genre = requests.get(URL_API + "books", params=params).json()["amount"]  # !
+    amount_pages = amount_all_books_genre // amount_books + 1 if amount_all_books_genre % amount_books != 0 else 0
+    params = {"amount": amount_books, "start": amount_books * page, "genre": name}  # !
+    response = requests.get(URL_API + "books", params=params).json()  # !
+    books_genre = response["books"]  # !
+    return render_template("books.html", url="/book/", books=books_genre, amount_pages=amount_pages)
 
 
 @app.route('/authors')
 def authors():
-    pass
+    params = {"letters": True}
+    response = requests.get(URL_API + "book/authors", params=params).json()
+    dict_authors = response["authors"]
+    print(dict_authors)
+    return render_template("authors.html", dict_authors=dict_authors, url="/author/")
+
+
+@app.route('/author/<int:id>/<int:page>')
+def author(id, page):
+    name = requests.get(URL_API + f"author/{id}").json()["author"]["name"]
+    amount_books = int(config_file["Constant"]["page_amount_books"])
+    params = {"onlyAmount": True, "author": name}  # !
+    amount_all_books_author = requests.get(URL_API + "books", params=params).json()["amount"]  # !
+    amount_pages = amount_all_books_author // amount_books + 1 if amount_all_books_author % amount_books != 0 else 0
+    params = {"amount": amount_books, "start": amount_books * page, "author": name}  # !
+    response = requests.get(URL_API + "books", params=params).json()  # !
+    books_genre = response["books"]  # !
+    return render_template("books.html", url="/book/", books=books_genre, amount_pages=amount_pages)
+
+
+@app.route('/cart')
+@login_required
+def cart():
+    it_is_librarian = False
+    response = requests.get(URL_API + f'user/{current_user.id}').json()
+    user = response["user"]
+    if user["type"] == "LIBRARIAN":
+        form = LibrarianForm()
+        it_is_librarian = True
+        if form.validate_on_submit():
+            pass  # Добавить книгу
+        return render_template("cart.html", form=form, it_is_librarian=it_is_librarian, cart=None)
+    ids = [int(el) for el in user["cart"].split(";")]
+    if not ids:
+        return render_template("cart.html", it_is_librarian=it_is_librarian, cart=None)
+    cart = [requests.get(URL_API + f'book/{book_id}').json()["book"] for book_id in ids]
+    return render_template("cart.html", it_is_librarian=it_is_librarian, cart=cart)
+
+
+@app.route('/forward/', methods=["POST"])
+def forward():
+    print(request.form["search"].data)
+
+
+@app.route('/add_book_card/<int:book_id>', methods=["POST"])
+def add_book_card(book_id):
+    json = {"user_id": current_user.id, "book_id": book_id}
+    requests.put(URL_API + "cart", json=json)
+    return redirect(f"book/{book_id}")
 
 
 @app.route('/login', methods=['GET', 'POST'])

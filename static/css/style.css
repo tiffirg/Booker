@@ -9,6 +9,7 @@ body {
     background-color: #fff;
     margin: 0px;
     padding: 0px;
+    min-height: 100vh;
 }
 
 .navbar_parent {
@@ -80,7 +81,9 @@ body {
 }
 
 .content {
-    flex: 1 0 0%;
+    background-color: #13191e;
+     flex-grow: 1;
+    height: 100%;
 }
 div, header {
     display: block;
@@ -1193,7 +1196,7 @@ margin-top: 1px;
 
 .biblio_book_author {
     font-size: 11px;
-    color: white;
+    color: #be5b04;
 }
 
 .light {
@@ -1325,3 +1328,103 @@ margin-top: 1px;
     background-image: linear-gradient(top, #303338, #2d3034);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#303338', EndColorStr='#2d3034');
  }
+
+.main_genres {
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding: 120px 60px 80px 60px;
+    background-color: #13191e;
+    background-image: url(http://booker.psdemo.ru/data/banners/img_header.jpg);
+}
+
+
+.main_genres section {
+    display: inline-block;
+    vertical-align: top;
+    width: 100%;
+    background-color: #13191e;
+    border-radius: 12px;
+    padding-bottom: 20px;
+
+}
+
+._9837af {
+    position: relative;
+    margin: 2.4rem 0 0 1.2rem;
+    padding: 0 0 0 2.4rem;
+    flex: 1;
+    word-break: break-word;
+}
+
+@media (min-width: 36em)
+._289d24 {
+    margin: 2.4rem 0 2.4rem 1.2rem;
+    padding: 0 0 0 .6rem;
+}
+
+._289d24 {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    vertical-align: top;
+    text-transform: uppercase;
+}
+
+._953327 {
+    color: #777;
+    font-family: var(--fontNormal);
+    font-weight: 700;
+    font-size: var(--fontSizeL);
+    line-height: var(--lineHeightL);
+    text-transform: var(--textTransformNone);
+    letter-spacing: var(--letterSpacingNormal);
+}
+
+._b5542b {
+    display: flex;
+    flex-flow: row wrap;
+    transition: all .5s ease-in-out;
+    padding: 0px;
+    margin: 0px;
+    list-style-type: none;
+    list-style: none;
+    box-sizing: inherit;
+}
+
+._899320 {
+    flex: 0 0 33%;
+    page-break-inside: avoid;
+    -moz-column-break-inside: avoid;
+    break-inside: avoid;
+}
+
+._bf2350 {
+    color: #be5b04;
+}
+
+._7fe79a {
+    transition: opacity .15s;
+    text-decoration: none;
+}
+
+._b4693b {
+    font-size: var(--fontSizeM);
+    line-height: var(--lineHeightM);
+    text-transform: var(--textTransformNone);
+    letter-spacing: var(--letterSpacingNormal);
+    font-family: var(--fontNormal);
+    font-weight: 400;
+}
+
+._1b82e1 {
+    padding: .6rem 0 1.2rem;
+}
+
+._e86232 {
+    margin: 0;
+    padding: .6rem 0 1.2rem;
+    text-transform: uppercase;
+}

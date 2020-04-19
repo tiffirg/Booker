@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% from "macros.html" import set_list_values %}
+{% block content %}
+    {{ set_list_values(dict_genres, url) }}
+{% endblock %}

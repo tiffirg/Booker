@@ -14,7 +14,13 @@
 
                         <div class="biblio_book_other_carriers">
                             <div class="biblio_book_other_carriers__item">
-                                <h2>Книга доступна</h2>
+                                {% if book_in_cart %}
+                                    <h2>Книга в корзине</h2>
+                                {%  elif current_user.is_authenticated %}
+                                    <h2>Книга доступна для заказа</h2>
+                                {% else %}
+                                    <h2>Зарегистрируйтесь чтобы заказать книгу</h2>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -34,18 +40,29 @@
                                 <p>{{book["description"]}}</p>
                             </div>
                         </div>
-                        <div class="biblio_book_buy clicktag" id="unr_buynow" data-clicktag-id="buynow_book">
-                            <form action="" method="post">
-                                <input type="hidden" name="action" value="create_custom_set">
-                                <input type="hidden" name="csrf" value="830634:1587109538:210b727c6830279061c6264dcc6a28a1809fef05db3676ffd63a3e8114365af1">
-                                <input value="50536228" type="hidden" name="arts"><input type="hidden" name="buy_now" value="true">
-                                <button rel="#buy_book_data" class="coolbtn btn-green a_buyany">
-                                    <span class="uppercase">
-                                        Добавить в корзину
-                                    </span>
-                                </button>
-                            </form>
-                        </div>
+                        {% if not (it_is_librarian or book_in_cart) %}
+                            <div class="biblio_book_buy clicktag" id="unr_buynow" data-clicktag-id="buynow_book">
+
+                                    {% if current_user.is_authenticated %}
+                                        {% set url_action = "/add_book_card/" + book["id"] | string %}
+                                         <form action={{url_action}} method="post">
+                                            <button class="coolbtn btn-green a_buyany">
+                                                <span class="uppercase">
+                                                    Добавить в корзину
+                                                </span>
+                                            </button>
+                                         </form>
+                                    {% else %}
+                                        <form action="/register" method="post">
+                                            <button class="coolbtn btn-green a_buyany">
+                                                <span class="uppercase">
+                                                    Зарегистрируйтесь
+                                                </span>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
