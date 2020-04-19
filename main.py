@@ -12,12 +12,6 @@ from forms.cartlibrarianform import LibrarianForm
 from forms.users import convert_user
 
 
-def transliteration2(text):
-    cyrillic = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
-    latin = 'a|b|v|g|d|e|e|zh|z|i|i|k|l|m|n|o|p|r|s|t|u|f|kh|tc|ch|sh|shch||y||e|iu|ia|A|B|V|G|D|E|E|Zh|Z|I|I|K|L|M|N|O|P|R|S|T|U|F|Kh|Tc|Ch|Sh|Shch||Y||E|Iu|Ia'.split('|')
-    return text.translate({ord(k): v for k, v in zip(cyrillic,latin)})
-
-
 config_file = configparser.ConfigParser()
 config_file.read_file(codecs.open("settings.ini", "r", "utf8"))
 URL_API = config_file["API"]["url_api"]
@@ -66,17 +60,29 @@ def books(page):
 @app.route("/book/<int:id>", methods=["POST", "GET"])
 def book(id):
     book_in_cart, it_is_librarian = False, False
+    in_issuance = False
     response = requests.get(URL_API + "book/" + str(id)).json()
     book = response["book"]
-    if current_user.is_authenticated:
-        book_id = book["id"]
-        response = requests.get(URL_API + f'user/{current_user.id}').json()
-        user = response["user"]
-        if user["type"] == "LIBRARIAN":
-            it_is_librarian = True
-        if user["cart"] and str(book_id) in user["cart"].split(";"):
-            book_in_cart = True
-    return render_template("book.html", book=book, book_in_cart=book_in_cart, it_is_librarian=it_is_librarian)
+    if not current_user.is_authenticated:
+        return render_template("book.html", book=book)
+    book_id = book["id"]
+    response = requests.get(URL_API + f'user/{current_user.id}').json()
+    user = response["user"]
+    if user["type"] == "LIBRARIAN":
+        it_is_librarian = True
+        return render_template("book.html", book=book, book_in_cart=book_in_cart, it_is_librarian=it_is_librarian)
+    print(user["cart"])
+    if user["cart"] and str(book_id) in user["cart"].split(";"):
+        book_in_cart = True
+    issues = requests.get(URL_API + "issues", json={"user_id": current_user.id, "issue_status": "ISSUED"}).json()
+    if issues.get("error", False):
+        return render_template("book.html", book=book, book_in_cart=book_in_cart)
+    for issue in issues:
+        if issue["id"] == book_id:
+            in_issuance = True
+            break
+    return render_template("book.html", book=book, book_in_cart=book_in_cart, it_is_librarian=it_is_librarian,
+                           in_issuance=in_issuance)
 
 
 @app.route('/genres')
@@ -105,7 +111,6 @@ def authors():
     params = {"letters": True}
     response = requests.get(URL_API + "book/authors", params=params).json()
     dict_authors = response["authors"]
-    print(dict_authors)
     return render_template("authors.html", dict_authors=dict_authors, url="/author/")
 
 
@@ -122,7 +127,7 @@ def author(id, page):
     return render_template("books.html", url="/book/", books=books_genre, amount_pages=amount_pages)
 
 
-@app.route('/cart')
+@app.route('/cart', methods=["GET", "POST"])
 @login_required
 def cart():
     it_is_librarian = False
@@ -132,13 +137,31 @@ def cart():
         form = LibrarianForm()
         it_is_librarian = True
         if form.validate_on_submit():
-            pass  # Добавить книгу
-        return render_template("cart.html", form=form, it_is_librarian=it_is_librarian, cart=None)
+            adding_book_request = eval(config_file["Adding"]["adding_book_request_structure"])
+            adding_book_statuses = eval(config_file["Adding"]["adding_book_statuses"])
+            adding_book = adding_book_request["book"]
+            adding_book["name"] = form.name.data
+            adding_book["author"] = form.author.data
+            adding_book["genre"] = form.genre.data
+            adding_book["barcode"] = form.barcode.data
+            adding_book["description"] = form.description.data
+            adding_book["image_url"] = form.image_url.data
+            adding_book["icon_url"] = form.icon_url.data
+            response = requests.post(URL_API + "/book", params=adding_book_request).json()
+            status = response["add_status"]
+            message = adding_book_statuses[status]
+            if status == "SUCCESS":
+                trash = ["csrf_token", "submit"]
+                for field in form:
+                    if field.name not in trash:
+                        field.data = ""
+            return render_template("cart.html", form=form, it_is_librarian=it_is_librarian, message=message)
+        return render_template("cart.html", form=form, it_is_librarian=it_is_librarian)
+    if not user["cart"]:
+        return render_template("cart.html", it_is_librarian=it_is_librarian)
     ids = [int(el) for el in user["cart"].split(";")]
-    if not ids:
-        return render_template("cart.html", it_is_librarian=it_is_librarian, cart=None)
     cart = [requests.get(URL_API + f'book/{book_id}').json()["book"] for book_id in ids]
-    return render_template("cart.html", it_is_librarian=it_is_librarian, cart=cart)
+    return render_template("cart.html", it_is_librarian=it_is_librarian, cart=cart, url="/book/")
 
 
 @app.route('/forward/', methods=["POST"])
@@ -149,8 +172,8 @@ def forward():
 @app.route('/add_book_card/<int:book_id>', methods=["POST"])
 def add_book_card(book_id):
     json = {"user_id": current_user.id, "book_id": book_id}
-    requests.put(URL_API + "cart", json=json)
-    return redirect(f"book/{book_id}")
+    requests.post(URL_API + "cart", json=json).json()
+    return redirect(f"/book/{book_id}")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -200,6 +223,6 @@ def register():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
-    # app.run()
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host='0.0.0.0', port=port)
+    app.run()

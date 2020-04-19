@@ -10,4 +10,5 @@ class LibrarianForm(FlaskForm):
     barcode = StringField('Штрих-код', validators=[DataRequired()])
     description = StringField('Описание', validators=[DataRequired()])
     image_url = StringField('Ссылка на картинку книги', validators=[DataRequired()])
+    icon_url = StringField("Ссылка на иконку книги", validators=[DataRequired()])
     submit = SubmitField('Добавить книгу')

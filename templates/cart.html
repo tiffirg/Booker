@@ -27,6 +27,19 @@
                 </form>
             </main>
         </div>
+    {% elif cart %}
+        {% from "macros.html" import set_book_menu %}
+        <div class="content">
+            <main class="section_books">
+                <div class="book_list">
+                    <ul class="book_list_items">
+                    {% for book in cart %}
+                        {{ set_book_menu(url, book["id"], book["icon_url"], book["name"], book["author"], book["description"]) }}
+                    {% endfor %}
+                    </ul>
+                </div>
+            </main>
+        </div>
     {% else %}
 
     {% endif %}
