@@ -28,13 +28,13 @@
             </main>
         </div>
     {% elif cart %}
-        {% from "macros.html" import set_book_menu %}
+        {% from "macros.html" import set_book_cart %}
         <div class="content">
-            <main class="section_books">
+            <main class="section_books_cart">
                 <div class="book_list">
                     <ul class="book_list_items">
                     {% for book in cart %}
-                        {{ set_book_menu(url, book["id"], book["icon_url"], book["name"], book["author"], book["description"]) }}
+                        {{ set_book_cart(url, book["id"], book["icon_url"], book["name"], book["author"]) }}
                     {% endfor %}
                     </ul>
                 </div>

@@ -42,7 +42,7 @@
                                 <p>{{book["description"]}}</p>
                             </div>
                         </div>
-                        {% if not (it_is_librarian or book_in_cart or in_issuance) %}
+                        {% if not it_is_librarian %}
                             <div class="biblio_book_buy clicktag" id="unr_buynow" data-clicktag-id="buynow_book">
 
                                     {% if current_user.is_authenticated %}
@@ -54,6 +54,14 @@
                                                 </span>
                                             </button>
                                          </form>
+                                    {% elif book_in_cart and in_issuance %}
+                                        <form action="/cart" method="post">
+                                            <button class="coolbtn btn-green a_buyany">
+                                                <span class="uppercase">
+                                                    Перейти в корзину
+                                                </span>
+                                            </button>
+                                        </form>
                                     {% else %}
                                         <form action="/register" method="post">
                                             <button class="coolbtn btn-green a_buyany">

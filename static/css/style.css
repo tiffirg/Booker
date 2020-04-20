@@ -850,6 +850,11 @@ a {
     padding: 120px 120px 80px 80px;
 }
 
+.section_books_cart {
+    padding: 120px 120px 80px 80px;
+   background-color: #13191e;
+}
+
 .book_list {
 
     background-color: #13191e;
