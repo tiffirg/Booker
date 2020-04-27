@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "macros.html" import set_book_swiper %}
+{% block content %}
+    <div class="content">
+        {% include "banner.html" %}
+        <div class="section">
+
+            <div class="container_menu">
+                <div class="signboard_menu">
+                    <h2>
+                        Книги
+                    </h2>
+
+                    <a href="/books/0">
+                        Все книги >
+                    </a>
+                </div>
+                <div id="slider1">
+                    <div class="thumbelina-but left">
+                        <span class="arrow_left"> </span>
+                    </div>
+                        <div style="position:absolute;overflow:hidden;width:100%;height:100%;">
+                            <ul class="thumbelina" style="left: 0px;">
+                                {% for values in books %}
+                                    <li>
+                                        {{ set_book_swiper(url, values["id"], values["icon_url"], values["name"], values["author"]) }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    <div class="thumbelina-but right">
+                        <span class="arrow_right"> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

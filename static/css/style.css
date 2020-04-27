@@ -326,50 +326,7 @@ footer {
     align-items: center;
 }
 
-.menu_carousel {
-    position: relative;
-}
-
-.isHidden {
-    display: none;
-}
-
-.carousel_btn_next {
-    right: -20px;
-    top: calc(50% - 20px);
-
-}
-
-.carousel_btn_prev {
-    left: -20px;
-    top: calc(50% - 20px);
-}
-
-.carousel_btn_next, .carousel_btn_prev {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #ffffff;
-    box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.13);
-    z-index: 2;
-    background-image: none;
-    cursor: pointer;
-}
-
-.swiper_container {
-    margin: 0 auto;
-    position: relative;
-    overflow: hidden;
-    list-style: none;
-    padding: 0;
-    z-index: 1;
-}
-
-.swiper_container .swiper_notification {
+.swiper-container .swiper_notification {
     position: absolute;
     left: 0;
     top: 0;
@@ -378,59 +335,8 @@ footer {
     z-index: -1000;
 }
 
-.swiper-container-horizontal > .swiper-pagination-bullets {
-  bottom: 10px;
-  left: 0;
-  width: 100%;
-}
-.swiper-container-horizontal > .swiper-pagination-progressbar {
-  width: 100%;
-  height: 4px;
-  left: 0;
-  top: 0;
-}
 
-.swiper-container-horizontal > .swiper-scrollbar {
-  position: absolute;
-  left: 1%;
-  bottom: 3px;
-  z-index: 50;
-  height: 5px;
-  width: 98%;
-}
-
-
-.swiper_wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-transition-property: -webkit-transform;
-    transition-property: -webkit-transform;
-    -o-transition-property: transform;
-    transition-property: transform;
-    transition-property: transform, -webkit-transform;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-}
-
-.swiper_container-android .swiper_slide, .swiper_wrapper {
-    -webkit-transform: translate3d(0px, 0, 0);
-    transform: translate3d(0px, 0, 0);
-}
-
-.swiper-container-free-mode > .swiper_wrapper {
-  -webkit-transition-timing-function: ease-out;
-  -o-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
-  margin: 0 auto;
-}
-
-.swiper_slide {
+.swiper-slide {
   height: auto;
 }
 
@@ -447,7 +353,7 @@ footer {
     margin-left: 16px;
 }
 
-.swiper_slide {
+.swiper-slide {
     flex-shrink: 0;
     height: 100%;
     position: relative;
@@ -460,6 +366,8 @@ footer {
 
 .book_info {
     height: 96px;
+    width: 124px;
+    overflow-x:hidden;
 }
 
 .book_image {
@@ -483,6 +391,7 @@ footer {
     text-align: left;
     color: white;
     text-decoration: none;
+
 }
 
 .book_author_wrapper {
@@ -498,7 +407,7 @@ footer {
     text-decoration: none;
 }
 
-.arrow_left, .arrow_right {
+.arrowLeft, .arrowRight {
     display: inline-block;
     width: 16px;
     height: 16px;
@@ -508,7 +417,7 @@ footer {
     background-size: cover;
 }
 
-.arrow_right {
+.arrowRight {
     transform: rotate(180deg);
 }
 
@@ -1432,4 +1341,98 @@ margin-top: 1px;
     margin: 0;
     padding: .6rem 0 1.2rem;
     text-transform: uppercase;
+}
+
+.thumbelina {
+    list-style:none;
+    padding:0px;
+    margin:0px;
+    position:absolute;
+    white-space:nowrap;
+    /* font-size:0 stop gaps between display-inline li elemets */
+    /* Either do this, or remove all white space in HTML beween li elements */
+    font-size:0;
+
+    /* prevent annoying iPad cut/paste actions */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+}
+
+/* Style for the list items that surround the thumbnails */
+.thumbelina li {
+   padding:15px;
+   display: inline-block;
+   line-height: 0px;
+   margin:0px;
+}
+
+/* Add a border to the thumbnails. */
+.thumbelina li img {
+     border:1px solid #ccc;
+}
+
+/* Hover effect for the images */
+.thumbelina li img:hover {
+     border:1px solid #aaa;
+}
+
+
+/*
+    Following is the CSS for the navigation buttons.
+    They are designed to fit flush on the ends of the slider
+    using absolute positioning, with the container as the parent element.
+    The sizes are set to match the demo slider.
+    You can change any of this as you wish - you don't even need to use these classes.
+    Position the buttons where you like on the page, change sizes, use images etc.
+    They don't have to be children of the container.
+*/
+
+/* Common style for the buttons */
+.thumbelina-but {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.13);
+    z-index: 2;
+    background-image: none;
+    cursor: pointer;
+}
+
+
+/* Disabled style when button is not active due to extents being reached. */
+/* You could do other things e.g. make buttons dissapear completely. */
+.thumbelina-but.disabled,
+.thumbelina-but.disabled:hover {
+    display: none;
+}
+
+
+/* Left edge button. */
+.left {
+   left: -20px;
+    top: calc(50% - 20px);
+}
+/* Right edge button */
+.right {
+    right: -20px;
+    top: calc(50% - 20px);
+}
+
+.arrow_left, .arrow_right {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    transform-origin: center center;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHBhdGggZmlsbD0iI0JFNUIwNCIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNS4yIDYuODQzTDkuOCAyLjI2YS44OTQuODk0IDAgMCAxIDEuMjY0IDEuMjYzTDYuNTYyIDguMDI1bDQuNDUyIDQuNDUyYS44OTIuODkyIDAgMCAxLTEuMjYyIDEuMjYzTDQgOC4wMWwxLjItMS4xNjd6Ii8+PC9zdmc+);
+    vertical-align: middle;
+    background-size: cover;
+}
+
+.arrow_right {
+    transform: rotate(180deg);
 }

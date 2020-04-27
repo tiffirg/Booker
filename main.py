@@ -36,13 +36,13 @@ def logout():
     return redirect("/")
 
 
-@app.route('/')
-def main():
+@app.route('/', methods=["GET", "POST"])
+def index():
     params = {"random": 15}
     response = requests.get(URL_API + "books", params=params)
     response_json = response.json()
     books = response_json['books']
-    return render_template("main.html", url="/book/", books=books)
+    return render_template("index.html", url="/book/", books=books)
 
 
 @app.route("/books/<int:page>", methods=["GET", "POST"])
@@ -71,7 +71,6 @@ def book(id):
     if user["type"] == "LIBRARIAN":
         it_is_librarian = True
         return render_template("book.html", book=book, book_in_cart=book_in_cart, it_is_librarian=it_is_librarian)
-    print(user["cart"])
     if user["cart"] and str(book_id) in user["cart"].split(";"):
         book_in_cart = True
     issues = requests.get(URL_API + "issues", json={"user_id": current_user.id, "issue_status": "ISSUED"}).json()
@@ -85,7 +84,7 @@ def book(id):
                            in_issuance=in_issuance)
 
 
-@app.route('/genres')
+@app.route('/genres', methods=["GET", "POST"])
 def genres():
     params = {"letters": True}  # !
     response = requests.get(URL_API + "book/genres", params=params).json()
@@ -93,7 +92,7 @@ def genres():
     return render_template("genres.html", dict_genres=dict_genres, url="/genre/")
 
 
-@app.route("/genre/<int:id>/<int:page>")
+@app.route("/genre/<int:id>/<int:page>", methods=["GET", "POST"])
 def genre(id, page):
     name = requests.get(URL_API + f"genre/{id}").json()["genre"]["name"]
     amount_books = int(config_file["Constant"]["page_amount_books"])
@@ -106,7 +105,7 @@ def genre(id, page):
     return render_template("books.html", url="/book/", books=books_genre, amount_pages=amount_pages)
 
 
-@app.route('/authors')
+@app.route('/authors', methods=["GET", "POST"])
 def authors():
     params = {"letters": True}
     response = requests.get(URL_API + "book/authors", params=params).json()
@@ -114,7 +113,7 @@ def authors():
     return render_template("authors.html", dict_authors=dict_authors, url="/author/")
 
 
-@app.route('/author/<int:id>/<int:page>')
+@app.route('/author/<int:id>/<int:page>', methods=["GET", "POST"])
 def author(id, page):
     name = requests.get(URL_API + f"author/{id}").json()["author"]["name"]
     amount_books = int(config_file["Constant"]["page_amount_books"])
@@ -147,7 +146,7 @@ def cart():
             adding_book["description"] = form.description.data
             adding_book["image_url"] = form.image_url.data
             adding_book["icon_url"] = form.icon_url.data
-            response = requests.post(URL_API + "/book", params=adding_book_request).json()
+            response = requests.post(URL_API + "/book", json=adding_book_request).json()
             status = response["add_status"]
             message = adding_book_statuses[status]
             if status == "SUCCESS":
@@ -164,12 +163,19 @@ def cart():
     return render_template("cart.html", it_is_librarian=it_is_librarian, cart=cart, url="/book/")
 
 
-@app.route('/forward/', methods=["POST"])
+@app.route('/forward/', methods=["GET", "POST"])
 def forward():
-    print(request.form["search"].data)
+    search = request.form["search"]
+    response = requests.get(URL_API + "books", params={"search": search}).json()
+    books = response["books"]
+    amount = response["amount"]
+    if amount == 1:
+        book_id = books[0]["id"]
+        return redirect(f"/book/{book_id}")
+    return render_template("books.html", url="/book/", books=books, amount_pages=1)
 
 
-@app.route('/add_book_card/<int:book_id>', methods=["POST"])
+@app.route('/add_book_card/<int:book_id>', methods=["GET", "POST"])
 def add_book_card(book_id):
     json = {"user_id": current_user.id, "book_id": book_id}
     requests.post(URL_API + "cart", json=json).json()
@@ -223,6 +229,6 @@ def register():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
-    # app.run()
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host='0.0.0.0', port=port)
+    app.run()
