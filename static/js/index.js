@@ -88,7 +88,7 @@
         
         setInterval(function(){
             animate();
-        });
+        }, 1000/200);
     };
     
     $.fn.Thumbelina.defaults = {

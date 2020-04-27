@@ -267,6 +267,7 @@ footer {
 .section {
     background-color: #13191e;
     padding: 40px 20px;
+
 }
 
 .section_input {
@@ -275,17 +276,18 @@ footer {
 }
 
 .container_menu {
-
-    background-color: #16212b;
-    overflow: visible;
-
     position: relative;
     margin-bottom: 16px;
-    border-radius: 12px;
-
-    padding: 40px 80px;
-
 }
+
+.container_sliders{
+    margin-bottom: 30px;
+    padding: 40px 80px;
+    border-radius: 12px;
+    background-color: #16212b;
+    overflow: visible;
+}
+
 .signboard_menu {
    font-family: "Blizzard",Helvetica,Arial,sans-serif;
     font-size: 22.784px;
@@ -1257,6 +1259,7 @@ margin-top: 1px;
     display: inline-block;
     vertical-align: top;
     width: 100%;
+
     background-color: #13191e;
     border-radius: 12px;
     padding-bottom: 20px;

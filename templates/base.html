@@ -8,22 +8,63 @@
     <script type="text/javascript" src="{{url_for('static', filename='js/index.js')}}"></script>
     <script type="text/javascript">
             $(function(){
-
                 $('#slider1').Thumbelina({
                     $bwdBut:$('#slider1 .left'),    // Selector to left button.
                     $fwdBut:$('#slider1 .right')    // Selector to right button.
                 });
+
+                 $('#slider2').Thumbelina({
+                    $bwdBut:$('#slider2 .left'),    // Selector to left button.
+                    $fwdBut:$('#slider2 .right')    // Selector to right button.
+                });
+
+                $('#slider3').Thumbelina({
+                    $bwdBut:$('#slider3 .left'),    // Selector to left button.
+                    $fwdBut:$('#slider3 .right')    // Selector to right button.
+                });
+
+                $('#slider4').Thumbelina({
+                    $bwdBut:$('#slider4 .left'),    // Selector to left button.
+                    $fwdBut:$('#slider4 .right')    // Selector to right button.
+                });
             })
         </script>
-    <style type="text/css">
-            #slider1 {
-                position:relative;  /* Containers need relative or absolute position. */
-                margin-left:20px;
-                width:100%;
-                height:300px;
-                border-top:1px solid #aaa;
-                border-bottom:1px solid #aaa;
-            }
+    <style>
+        #slider1{
+            position:relative;
+            margin-left:20px;
+            width:100%;
+            height:300px;
+            border-top:1px solid #aaa;
+            border-bottom:1px solid #aaa;
+        }
+
+        #slider2{
+            position:relative;
+            margin-left:20px;
+            width:100%;
+            height:300px;
+            border-top:1px solid #aaa;
+            border-bottom:1px solid #aaa;
+        }
+
+        #slider3{
+            position:relative;
+            margin-left:20px;
+            width:100%;
+            height:300px;
+            border-top:1px solid #aaa;
+            border-bottom:1px solid #aaa;
+        }
+
+        #slider4{
+            position:relative;
+            margin-left:20px;
+            width:100%;
+            height:300px;
+            border-top:1px solid #aaa;
+            border-bottom:1px solid #aaa;
+        }
     </style>
     <title>Booker</title>
 </head>

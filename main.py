@@ -3,6 +3,7 @@ import requests
 import codecs
 import os
 import hashlib
+from random import shuffle
 from ast import literal_eval as eval
 from flask import Flask, render_template, redirect, abort, request
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -38,11 +39,24 @@ def logout():
 
 @app.route('/', methods=["GET", "POST"])
 def index():
+    all_books = []
     params = {"random": 15}
-    response = requests.get(URL_API + "books", params=params)
-    response_json = response.json()
-    books = response_json['books']
-    return render_template("index.html", url="/book/", books=books)
+    response_books = requests.get(URL_API + "books", params=params)
+    response_books_json = response_books.json()
+    books = response_books_json['books']
+    all_books.append(books)
+    response_genres = requests.get(URL_API + "book/genres")
+    response_genres_json = response_genres.json()
+    genres = [response_genre["name"] for response_genre in response_genres_json["genres"]]
+    shuffle(genres)
+    genres = genres[:int(config_file["Constant"]["amount_genres_index"])]
+    for genre in genres:
+        params["genre"] = params.get("genre", genre)
+        response_genre = requests.get(URL_API + 'books', params=params)
+        response_genre_json = response_genre.json()
+        genre_books = response_genre_json["books"]
+        all_books.append(genre_books)
+    return render_template("index.html", url="/book/", all_books=all_books)
 
 
 @app.route("/books/<int:page>", methods=["GET", "POST"])
