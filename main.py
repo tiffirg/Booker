@@ -40,23 +40,26 @@ def logout():
 @app.route('/', methods=["GET", "POST"])
 def index():
     all_books = []
-    params = {"random": 15}
+    result_words = []
+    params = {"random": int(config_file["Constant"]["amount_books_slider"])}
     response_books = requests.get(URL_API + "books", params=params)
     response_books_json = response_books.json()
     books = response_books_json['books']
     all_books.append(books)
+    result_words.append({"header": "Книги", "link_words": "Все книги", "link": "/books/0"})
     response_genres = requests.get(URL_API + "book/genres")
     response_genres_json = response_genres.json()
-    genres = [response_genre["name"] for response_genre in response_genres_json["genres"]]
+    genres = [response_genre for response_genre in response_genres_json["genres"]]
     shuffle(genres)
     genres = genres[:int(config_file["Constant"]["amount_genres_index"])]
     for genre in genres:
-        params["genre"] = params.get("genre", genre)
+        params["genre"] = genre["name"]
         response_genre = requests.get(URL_API + 'books', params=params)
         response_genre_json = response_genre.json()
         genre_books = response_genre_json["books"]
         all_books.append(genre_books)
-    return render_template("index.html", url="/book/", all_books=all_books)
+        result_words.append({"header": genre["name"], "link_words": "Книги жанра", "link": f"genre/{genre['id']}/0"})
+    return render_template("index.html", url="/book/", all_books=all_books, words=result_words)
 
 
 @app.route("/books/<int:page>", methods=["GET", "POST"])
@@ -100,9 +103,9 @@ def book(id):
 
 @app.route('/genres', methods=["GET", "POST"])
 def genres():
-    params = {"letters": True}  # !
+    params = {"letters": True}
     response = requests.get(URL_API + "book/genres", params=params).json()
-    dict_genres = response["genres"]  # !
+    dict_genres = response["genres"]
     return render_template("genres.html", dict_genres=dict_genres, url="/genre/")
 
 
@@ -110,12 +113,12 @@ def genres():
 def genre(id, page):
     name = requests.get(URL_API + f"genre/{id}").json()["genre"]["name"]
     amount_books = int(config_file["Constant"]["page_amount_books"])
-    params = {"onlyAmount": True, "genre": name}  # !
-    amount_all_books_genre = requests.get(URL_API + "books", params=params).json()["amount"]  # !
+    params = {"onlyAmount": True, "genre": name}
+    amount_all_books_genre = requests.get(URL_API + "books", params=params).json()["amount"]
     amount_pages = amount_all_books_genre // amount_books + 1 if amount_all_books_genre % amount_books != 0 else 0
-    params = {"amount": amount_books, "start": amount_books * page, "genre": name}  # !
-    response = requests.get(URL_API + "books", params=params).json()  # !
-    books_genre = response["books"]  # !
+    params = {"amount": amount_books, "start": amount_books * page, "genre": name}
+    response = requests.get(URL_API + "books", params=params).json()
+    books_genre = response["books"]
     return render_template("books.html", url="/book/", books=books_genre, amount_pages=amount_pages)
 
 
@@ -131,12 +134,12 @@ def authors():
 def author(id, page):
     name = requests.get(URL_API + f"author/{id}").json()["author"]["name"]
     amount_books = int(config_file["Constant"]["page_amount_books"])
-    params = {"onlyAmount": True, "author": name}  # !
-    amount_all_books_author = requests.get(URL_API + "books", params=params).json()["amount"]  # !
+    params = {"onlyAmount": True, "author": name}
+    amount_all_books_author = requests.get(URL_API + "books", params=params).json()["amount"]
     amount_pages = amount_all_books_author // amount_books + 1 if amount_all_books_author % amount_books != 0 else 0
-    params = {"amount": amount_books, "start": amount_books * page, "author": name}  # !
-    response = requests.get(URL_API + "books", params=params).json()  # !
-    books_genre = response["books"]  # !
+    params = {"amount": amount_books, "start": amount_books * page, "author": name}
+    response = requests.get(URL_API + "books", params=params).json()
+    books_genre = response["books"]
     return render_template("books.html", url="/book/", books=books_genre, amount_pages=amount_pages)
 
 
@@ -189,7 +192,7 @@ def forward():
         return redirect(f"/book/{book_id}")
     if amount == 0:
         not_search = True
-        params = {"random": 15}
+        params = {"random": int(config_file["Constant"]["amount_books_slider"])}
         response_books = requests.get(URL_API + "books", params=params)
         response_books_json = response_books.json()
         books = response_books_json['books']

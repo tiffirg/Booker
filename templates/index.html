@@ -9,11 +9,11 @@
                     <div class="container_sliders">
                         <div class="signboard_menu">
                             <h2>
-                                Книги
+                                {{words[loop.index0]["header"]}}
                             </h2>
 
-                            <a href="/books/0">
-                                Все книги >
+                            <a href={{words[loop.index0]["link"]}}>
+                                {{words[loop.index0]["link_words"]}} >
                             </a>
                         </div>
                         <div id="slider{{loop.index}}">
