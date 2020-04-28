@@ -45,7 +45,16 @@
                         {% if not it_is_librarian %}
                             <div class="biblio_book_buy clicktag" id="unr_buynow" data-clicktag-id="buynow_book">
 
-                                    {% if current_user.is_authenticated %}
+
+                                    {% if book_in_cart and in_issuance %}
+                                        <form action="/cart" method="post">
+                                            <button class="coolbtn btn-green a_buyany">
+                                                <span class="uppercase">
+                                                    Перейти в корзину
+                                                </span>
+                                            </button>
+                                        </form>
+                                    {% elif current_user.is_authenticated %}
                                         {% set url_action = "/add_book_card/" + book["id"] | string %}
                                          <form action={{url_action}} method="post">
                                             <button class="coolbtn btn-green a_buyany">
@@ -54,14 +63,6 @@
                                                 </span>
                                             </button>
                                          </form>
-                                    {% elif book_in_cart and in_issuance %}
-                                        <form action="/cart" method="post">
-                                            <button class="coolbtn btn-green a_buyany">
-                                                <span class="uppercase">
-                                                    Перейти в корзину
-                                                </span>
-                                            </button>
-                                        </form>
                                     {% else %}
                                         <form action="/register" method="post">
                                             <button class="coolbtn btn-green a_buyany">

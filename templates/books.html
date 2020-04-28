@@ -1,13 +1,49 @@
 {% extends "base.html" %}
-{% from "macros.html" import set_book_menu %}
+{% from "macros.html" import set_book_menu, set_book_swiper %}
 {% block content %}
 <div class="content">
     <main class="section_books">
         <div class="book_list">
             <ul class="book_list_items">
-                {% for book in books %}
-                    {{ set_book_menu(url, book["id"], book["icon_url"], book["name"], book["author"], book["description"]) }}
-                {% endfor %}
+                {% if not not_search %}
+                    {% for book in books %}
+                        {{ set_book_menu(url, book["id"], book["icon_url"], book["name"], book["author"], book["description"]) }}
+                    {% endfor %}
+                {% else %}
+                    <li class="book_list_item">
+                        <h1>Ничего не найдено</h1>
+                    </li>
+                    <li class="book_list_item">
+                        <div class="container_sliders">
+                        <div class="signboard_menu">
+                            <h2>
+                                Книги, которые могут вам понравиться
+                            </h2>
+
+                            <a href="/books/0">
+                                Все книги >
+                            </a>
+                        </div>
+                        <div id="slider5">
+                            <div class="thumbelina-but left">
+                                <span class="arrow_left"> </span>
+                            </div>
+                                <div style="position:absolute;overflow:hidden;width:100%;height:100%;">
+                                    <ul class="thumbelina" style="left: 0px;">
+                                        {% for values in books %}
+                                            <li>
+                                                {{ set_book_swiper(url, values["id"], values["icon_url"], values["name"], values["author"]) }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            <div class="thumbelina-but right">
+                                <span class="arrow_right"> </span>
+                            </div>
+                        </div>
+                    </div>
+                    </li>
+                {% endif %}
             </ul>
         </div>
 

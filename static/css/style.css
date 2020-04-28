@@ -676,6 +676,11 @@ textarea.form-control{height:auto}
     list-style: none;
 }
 
+.book_list_items h1 {
+    text-align: center;
+    color: white;
+}
+
 .book_list_item {
     width: 100%;
 }

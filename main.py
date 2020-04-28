@@ -179,6 +179,7 @@ def cart():
 
 @app.route('/forward/', methods=["GET", "POST"])
 def forward():
+    not_search = False
     search = request.form["search"]
     response = requests.get(URL_API + "books", params={"search": search}).json()
     books = response["books"]
@@ -186,6 +187,13 @@ def forward():
     if amount == 1:
         book_id = books[0]["id"]
         return redirect(f"/book/{book_id}")
+    if amount == 0:
+        not_search = True
+        params = {"random": 15}
+        response_books = requests.get(URL_API + "books", params=params)
+        response_books_json = response_books.json()
+        books = response_books_json['books']
+        return render_template("books.html", url="/book/", books=books, amount_pages=1, not_search=not_search)
     return render_template("books.html", url="/book/", books=books, amount_pages=1)
 
 
@@ -243,5 +251,6 @@ def register():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host='0.0.0.0', port=port)
+    app.run()
