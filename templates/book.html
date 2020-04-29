@@ -16,8 +16,10 @@
                             <div class="biblio_book_other_carriers__item">
                                 {% if book_in_cart %}
                                     <h2>Книга в корзине</h2>
-                                {% elif in_issuance %}
+                                {% elif in_user_issuance %}
                                     <h2>Книга вам выдана</h2>
+                                {% elif in_issuance %}
+                                    <h2>Книга недоступна</h2>
                                 {%  elif current_user.is_authenticated %}
                                     <h2>Книга доступна для заказа</h2>
                                 {% else %}
@@ -42,9 +44,9 @@
                                 <p>{{book["description"]}}</p>
                             </div>
                         </div>
-                        {% if not it_is_librarian %}
+                        {% if not it_is_librarian and not (in_issuance and not in_user_issuance)%}
                             <div class="biblio_book_buy clicktag" id="unr_buynow" data-clicktag-id="buynow_book">
-                                    {% if book_in_cart or in_issuance %}
+                                    {% if book_in_cart or in_user_issuance %}
                                         <form action="/cart" method="post">
                                             <button class="coolbtn btn-green a_buyany">
                                                 <span class="uppercase">

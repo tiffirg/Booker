@@ -187,8 +187,95 @@
                        </div>
                     </a>
                 </div>
+                <br>
                 <div class="ContextBookCardLong__bookDescription">
-                    <div> </div>
+                    <div class="biblio_book_buy clicktag">
+                        <form action="/add_book_order/" method="POST">
+                            <input type="hidden" name="book" value={{id}}>
+                            <button class="coolbtn a_buyany" >
+                                <span class="uppercase">
+                                    Получить книгу
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="biblio_book_buy clicktag">
+                        <form action="/delete_book_cart/" method="POST">
+                            <input type="hidden" name="book" value={{id}}>
+                            <button class="coolbtn a_buyany" >
+                                <span class="uppercase">
+                                    Удалить из корзины
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>
+{% endmacro %}
+
+{% macro set_book_order(url, issue_id, image_url, name, author) %}
+<li class="book_list_item">
+    <div class="context_book_list_item">
+        <div class="ContextBookCardLong__bookWrapper">
+            <div class="ContextBookCardLong__bookCover">
+                <div class="BookCover__book" style="width: 112px; height: 180px;">
+                    {% set id_book = id | string %}
+                    {% set url_book = url + id_book %}
+                    <a href={{url_book}}>
+                       <img width="112" height="180" src={{image_url}} alt={{name}} class="BookCover__bookImage" srcset="{{image_url}} 2x">
+                    </a>
+                </div>
+            </div>
+
+            <div class="ContextBookCardLong__bookDetail">
+                <div class="ContextBookCardLong__bookData">
+                    <div class="ContextBookCardLong__bookTitle">
+                        <a href="{{url_book}}" style="color: #d2d4d6">
+                            <div>
+                                <span width="0">
+                                    <span>
+                                        <span>
+                                            {{name}}
+                                        </span>
+                                    </span>
+                                    <span style="position: fixed; visibility: hidden; top: 0px; left: 0px;">
+                                        <span>…</span>
+                                    </span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <a class="ContextBookCardLong__bookAuthor" href={{url_book}}>
+                       <div>
+                           <span width="0">
+                               <span>
+                                    <span>
+                                        {{author}}
+                                    </span>
+                               </span>
+                               <span style="position: fixed; visibility: hidden; top: 0px; left: 0px;">
+                                   <span>…</span>
+                               </span>
+                           </span>
+                       </div>
+                    </a>
+                </div>
+                <br>
+                <div class="ContextBookCardLong__bookDescription">
+                    <div class="biblio_book_buy clicktag">
+                        <form action="/return_book/" method="POST">
+                            <input type="hidden" name="issue_id" value={{issue_id}}>
+                            <button class="coolbtn a_buyany" >
+                                <span class="uppercase">
+                                    Вернуть книгу
+                                </span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

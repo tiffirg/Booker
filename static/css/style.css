@@ -767,15 +767,15 @@ a {
 }
 
 .section_books_cart {
-    padding: 120px 120px 80px 80px;
-   background-color: #13191e;
+    padding: 80px 120px 40px 80px;
+
 }
 
 .book_list {
 
-    background-color: #13191e;
+    background-color: #16212b;
     overflow: visible;
-
+    margin: 40px 0px;
     position: relative;
     padding-top: 20px;
     border-radius: 12px;

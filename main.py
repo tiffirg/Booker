@@ -10,6 +10,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
 from forms.cartlibrarianform import LibrarianForm
+from werkzeug.utils import secure_filename
 from forms.users import convert_user
 
 
@@ -19,6 +20,7 @@ URL_API = config_file["API"]["url_api"]
 REGISTRATION = config_file["Registration"]
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config_file["CSRF"]["secret_key"]
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -77,7 +79,7 @@ def books(page):
 @app.route("/book/<int:id>", methods=["POST", "GET"])
 def book(id):
     book_in_cart, it_is_librarian = False, False
-    in_issuance = False
+    in_issuance, in_user_issuance = False, False
     response = requests.get(URL_API + "book/" + str(id)).json()
     book = response["book"]
     if not current_user.is_authenticated:
@@ -87,18 +89,20 @@ def book(id):
     user = response["user"]
     if user["type"] == "LIBRARIAN":
         it_is_librarian = True
-        return render_template("book.html", book=book, book_in_cart=book_in_cart, it_is_librarian=it_is_librarian)
-    if user["cart"] and str(book_id) in user["cart"].split(";"):
+        return render_template("book.html", book=book, it_is_librarian=it_is_librarian)
+    if book["quantity"] == '0':
+        in_issuance = True
+    if user["cart"] and str(book_id) in user["cart"]:
         book_in_cart = True
-    issues = requests.get(URL_API + "issues", json={"user_id": current_user.id, "issue_status": "ISSUED"}).json()
+    issues = requests.get(URL_API + "issues", params={"user_id": current_user.id, "issue_status": "ISSUED"}).json()
     if issues.get("error", False):
-        return render_template("book.html", book=book, book_in_cart=book_in_cart)
-    for issue in issues:
-        if issue["id"] == book_id:
-            in_issuance = True
-            break
-    return render_template("book.html", book=book, book_in_cart=book_in_cart, it_is_librarian=it_is_librarian,
-                           in_issuance=in_issuance)
+        return render_template("book.html", book=book, book_in_cart=book_in_cart, in_issuance=in_issuance)
+    for issue in issues["issues"]:
+        if int(issue["book_id"]) == book_id:
+            in_user_issuance = True
+            return render_template("book.html", book=book, book_in_cart=book_in_cart, in_user_issuance=in_user_issuance,
+                                   in_issuance=in_issuance)
+    return render_template("book.html", book=book, book_in_cart=book_in_cart, in_issuance=in_issuance)
 
 
 @app.route('/genres', methods=["GET", "POST"])
@@ -149,6 +153,7 @@ def cart():
     it_is_librarian = False
     response = requests.get(URL_API + f'user/{current_user.id}').json()
     user = response["user"]
+
     if user["type"] == "LIBRARIAN":
         form = LibrarianForm()
         it_is_librarian = True
@@ -161,8 +166,9 @@ def cart():
             adding_book["genre"] = form.genre.data
             adding_book["barcode"] = form.barcode.data
             adding_book["description"] = form.description.data
-            adding_book["image_url"] = form.image_url.data
-            adding_book["icon_url"] = form.icon_url.data
+            file = form.image.data
+            adding_book["image_url"] = form.image.data
+
             response = requests.post(URL_API + "/book", json=adding_book_request).json()
             status = response["add_status"]
             message = adding_book_statuses[status]
@@ -173,16 +179,19 @@ def cart():
                         field.data = ""
             return render_template("cart.html", form=form, it_is_librarian=it_is_librarian, message=message)
         return render_template("cart.html", form=form, it_is_librarian=it_is_librarian)
+    response_issues = requests.get(URL_API + "issues", params={"user_id": current_user.id, "issue_status": "ISSUED"}).json()["issues"]
+    issues = [requests.get(URL_API + f'book/{book["book_id"]}').json()["book"] for book in response_issues]
     if not user["cart"]:
-        return render_template("cart.html", it_is_librarian=it_is_librarian)
+        return render_template("cart.html", it_is_librarian=it_is_librarian, issues=issues,
+                               response_issues=response_issues, url="/book/")
     ids = [int(el) for el in user["cart"].split(";")]
     cart = [requests.get(URL_API + f'book/{book_id}').json()["book"] for book_id in ids]
-    return render_template("cart.html", it_is_librarian=it_is_librarian, cart=cart, url="/book/")
+    return render_template("cart.html", it_is_librarian=it_is_librarian, cart=cart, issues=issues,
+                           response_issues=response_issues, url="/book/")
 
 
 @app.route('/forward/', methods=["GET", "POST"])
 def forward():
-    not_search = False
     search = request.form["search"]
     response = requests.get(URL_API + "books", params={"search": search}).json()
     books = response["books"]
@@ -200,11 +209,34 @@ def forward():
     return render_template("books.html", url="/book/", books=books, amount_pages=1)
 
 
+@app.route('/add_book_order/', methods=["GET", "POST"])
+def add_book_order():
+    book_id = request.form["book"]
+    params = {"user_id": current_user.id, "book_id": book_id}
+    requests.put(URL_API + "issue", params=params)
+    return redirect("/cart")
+
+
+@app.route("/return_book/", methods=["GET", "POST"])
+def return_book():
+    issue_id = request.form["issue_id"]
+    requests.post(URL_API + f'issue/return/{issue_id}')
+    return redirect("/cart")
+
+
 @app.route('/add_book_card/<int:book_id>', methods=["GET", "POST"])
 def add_book_card(book_id):
     json = {"user_id": current_user.id, "book_id": book_id}
     requests.post(URL_API + "cart", json=json).json()
     return redirect(f"/book/{book_id}")
+
+
+@app.route('/delete_book_cart/', methods=["GET", "POST"])
+def delete_book_cart():
+    book_id = request.form["book"]
+    params = {"user_id": current_user.id, "book_id": book_id}
+    requests.delete(URL_API + "cart", params=params).json()
+    return redirect("/cart")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -256,4 +288,3 @@ def register():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
-    # app.run()

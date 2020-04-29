@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, FileField
 from wtforms.validators import DataRequired
+from flask_wtf.file import FileAllowed, FileRequired
 
 
 class LibrarianForm(FlaskForm):
@@ -9,6 +10,5 @@ class LibrarianForm(FlaskForm):
     genre = StringField('Жанр', validators=[DataRequired()])
     barcode = StringField('Штрих-код', validators=[DataRequired()])
     description = StringField('Описание', validators=[DataRequired()])
-    image_url = StringField('Ссылка на картинку книги', validators=[DataRequired()])
-    icon_url = StringField("Ссылка на иконку книги", validators=[DataRequired()])
+    image = FileField()
     submit = SubmitField('Добавить книгу')

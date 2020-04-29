@@ -4,7 +4,7 @@
         <div class="section_input">
             <main role="main" class="container">
                 <h1>Добавление книги</h1>
-                <form action="" method="post" novalidate>
+                <form action="" method="post" novalidate enctype=multipart/form-data>
                     {{ form.hidden_tag() }}
                     {% set trash = ["csrf_token", "submit"] %}
                     {% for field in form if field.name not in trash %}
@@ -27,20 +27,62 @@
                 </form>
             </main>
         </div>
-    {% elif cart %}
-        {% from "macros.html" import set_book_cart %}
+    {% else %}
+        {% from "macros.html" import set_book_cart, set_book_order %}
         <div class="content">
             <main class="section_books_cart">
                 <div class="book_list">
                     <ul class="book_list_items">
-                    {% for book in cart %}
-                        {{ set_book_cart(url, book["id"], book["icon_url"], book["name"], book["author"]) }}
-                    {% endfor %}
+                        <li class="book_list_item">
+                            <h1>
+                                {{current_user.name}}
+                            </h1>
+                        </li>
+                    </ul>
+                </div>
+                <br>
+                <div class="book_list">
+                    <ul class="book_list_items">
+                        <li class="book_list_item">
+                            <h1>
+                                Корзина
+                            </h1>
+                        </li>
+                        {% if cart %}
+                            {% for book in cart %}
+                                {{ set_book_cart(url, book["id"], book["icon_url"], book["name"], book["author"]) }}
+                            {% endfor %}
+                        {% else %}
+                            <li class="book_list_item">
+                                <h1>
+                                    Ваша корзина пуста
+                                </h1>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="book_list">
+                    <ul class="book_list_items">
+                        <li class="book_list_item">
+                            <h1>
+                                Заказы
+                            </h1>
+                        </li>
+                        {% if issues %}
+                            {% for book in issues %}
+                                {{ set_book_order(url, response_issues[loop.index0]["id"], book["icon_url"], book["name"], book["author"]) }}
+                            {% endfor %}
+                        {% else %}
+                            <li class="book_list_item">
+                                <h1>
+                                    У вас отсутствуют текущие заказы книг
+                                </h1>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </main>
         </div>
-    {% else %}
-
     {% endif %}
 {% endblock %}
