@@ -172,8 +172,9 @@ def cart():
             adding_book["description"] = form.description.data
             file = form.image.data
             file_name = file.filename
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(filename=file_name)))
-            adding_book["image_url"] = f'{os.getcwd()}/{file_name}'
+            path_file = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(filename=file_name))
+            file.save(path_file)
+            adding_book["image_url"] = os.path.join(os.getcwd(), path_file)
             response = requests.post(URL_API + "/book", json=adding_book_request).json()
             status = response["add_status"]
             message = adding_book_statuses[status]
