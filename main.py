@@ -19,6 +19,7 @@ config_file.read_file(codecs.open("settings.ini", "r", "utf8"))
 URL_API = config_file["API"]["url_api"]
 REGISTRATION = config_file["Registration"]
 UPLOAD_FOLDER = config_file["APP"]["upload_folder"]
+
 if not os.path.isdir(UPLOAD_FOLDER):
     os.mkdir(UPLOAD_FOLDER)
 app = Flask(__name__)
@@ -174,7 +175,7 @@ def cart():
             file_name = file.filename
             path_file = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(filename=file_name))
             file.save(path_file)
-            adding_book["image_url"] = os.path.join(os.getcwd(), path_file)
+            adding_book["image_url"] = os.path.join(os.path.dirname(os.path.abspath(__file__)), path_file)
             response = requests.post(URL_API + "/book", json=adding_book_request).json()
             status = response["add_status"]
             message = adding_book_statuses[status]
