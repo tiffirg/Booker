@@ -25,7 +25,7 @@ if not os.path.isdir(UPLOAD_FOLDER):
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config_file["CSRF"]["secret_key"]
 app.config['MAX_CONTENT_LENGTH'] = int(config_file["APP"]["max_bytes"])
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), UPLOAD_FOLDER)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -158,7 +158,6 @@ def cart():
     it_is_librarian = False
     response = requests.get(URL_API + f'user/{current_user.id}').json()
     user = response["user"]
-
     if user["type"] == "LIBRARIAN":
         form = LibrarianForm()
         it_is_librarian = True
@@ -175,7 +174,7 @@ def cart():
             file_name = file.filename
             path_file = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(filename=file_name))
             file.save(path_file)
-            adding_book["image_url"] = os.path.join(os.path.dirname(os.path.abspath(__file__)), path_file)
+            adding_book["image_url"] = path_file
             response = requests.post(URL_API + "/book", json=adding_book_request).json()
             status = response["add_status"]
             message = adding_book_statuses[status]
