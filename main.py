@@ -5,7 +5,7 @@ import os
 import hashlib
 from random import shuffle
 from ast import literal_eval as eval
-from flask import Flask, render_template, redirect, abort, request
+from flask import Flask, render_template, redirect, abort, request, url_for
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
@@ -18,9 +18,13 @@ config_file = configparser.ConfigParser()
 config_file.read_file(codecs.open("settings.ini", "r", "utf8"))
 URL_API = config_file["API"]["url_api"]
 REGISTRATION = config_file["Registration"]
+UPLOAD_FOLDER = config_file["APP"]["upload_folder"]
+if not os.path.isdir(UPLOAD_FOLDER):
+    os.mkdir(UPLOAD_FOLDER)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config_file["CSRF"]["secret_key"]
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = int(config_file["APP"]["max_bytes"])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -167,8 +171,9 @@ def cart():
             adding_book["barcode"] = form.barcode.data
             adding_book["description"] = form.description.data
             file = form.image.data
-            adding_book["image_url"] = form.image.data
-
+            file_name = file.filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(filename=file_name)))
+            adding_book["image_url"] = f'{os.getcwd()}/{file_name}'
             response = requests.post(URL_API + "/book", json=adding_book_request).json()
             status = response["add_status"]
             message = adding_book_statuses[status]
@@ -286,5 +291,6 @@ def register():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host='0.0.0.0', port=port)
+    app.run()
