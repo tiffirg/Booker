@@ -10,18 +10,13 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from forms.loginform import LoginForm
 from forms.registerform import RegisterForm
 from forms.cartlibrarianform import LibrarianForm
-from werkzeug.utils import secure_filename
 from forms.users import convert_user
-import json
 
 
 config_file = configparser.ConfigParser()
 config_file.read_file(codecs.open("settings.ini", "r", "utf8"))
 URL_API = config_file["API"]["url_api"]
 REGISTRATION = config_file["Registration"]
-
-if not os.path.isdir(UPLOAD_FOLDER):
-    os.mkdir(UPLOAD_FOLDER)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config_file["CSRF"]["secret_key"]
 login_manager = LoginManager()
