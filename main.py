@@ -12,20 +12,18 @@ from forms.registerform import RegisterForm
 from forms.cartlibrarianform import LibrarianForm
 from werkzeug.utils import secure_filename
 from forms.users import convert_user
+import json
 
 
 config_file = configparser.ConfigParser()
 config_file.read_file(codecs.open("settings.ini", "r", "utf8"))
 URL_API = config_file["API"]["url_api"]
 REGISTRATION = config_file["Registration"]
-UPLOAD_FOLDER = config_file["APP"]["upload_folder"]
 
 if not os.path.isdir(UPLOAD_FOLDER):
     os.mkdir(UPLOAD_FOLDER)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = config_file["CSRF"]["secret_key"]
-app.config['MAX_CONTENT_LENGTH'] = int(config_file["APP"]["max_bytes"])
-app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), UPLOAD_FOLDER)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -170,11 +168,8 @@ def cart():
             adding_book["genre"] = form.genre.data
             adding_book["barcode"] = form.barcode.data
             adding_book["description"] = form.description.data
-            file = form.image.data
-            file_name = file.filename
-            path_file = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(filename=file_name))
-            file.save(path_file)
-            adding_book["image_url"] = path_file
+            adding_book["image_url"] = form.image_data
+            adding_book["icon_url"] = form.icon.data
             response = requests.post(URL_API + "/book", json=adding_book_request).json()
             status = response["add_status"]
             message = adding_book_statuses[status]
