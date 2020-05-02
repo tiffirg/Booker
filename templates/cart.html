@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
     {% if it_is_librarian %}
+    <div class="content">
         <div class="section_input">
             <main role="main" class="container">
                 <h1>Добавление книги</h1>
@@ -27,6 +28,7 @@
                 </form>
             </main>
         </div>
+    </div>
     {% else %}
         {% from "macros.html" import set_book_cart, set_book_order %}
         <div class="content">
