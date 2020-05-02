@@ -163,7 +163,7 @@ def cart():
             adding_book["genre"] = form.genre.data
             adding_book["barcode"] = form.barcode.data
             adding_book["description"] = form.description.data
-            adding_book["image_url"] = form.image_data
+            adding_book["image_url"] = form.image.data
             adding_book["icon_url"] = form.icon.data
             response = requests.post(URL_API + "/book", json=adding_book_request).json()
             status = response["add_status"]
